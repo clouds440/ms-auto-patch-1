@@ -94,6 +94,8 @@
 
           <button type="button" class="button" onclick="button(20)"> 20 </button>
           <button type="button" class="button" onclick="button(40)"> 40 </button>
+
+          <button type="button" class="button" id="delay" onclick="setDelayTime()"> Delay </button>
       </div>
       <br>
       <div id="timeDiv" class="font">
@@ -109,6 +111,8 @@
   </div>
 
 <script>
+    let delayToggle = false;
+    let delay = 5000;
   //set default value for phones and desktops
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       document.getElementById('num').value = 20; // Set default value to 20 for phones
@@ -128,8 +132,29 @@
     num.value = value;
 
     // Set time required
+    if (!delayToggle) {
+      time.innerHTML = parseInt(num.value) * 5.5;
+    } else {
+      time.innerHTML = parseInt(num.value) * 10.5;
+    }
+  }
+
+  // Delay button function
+  function setDelayTime() {
+    delay = 10000;
     var time = document.getElementById('time');
-    time.innerHTML = parseInt(num.value) * 5.5;
+
+    const button = document.getElementById('delay');
+    if (delayToggle) {
+      button.style.backgroundColor = 'rgba(6, 144, 243, 0.836)';
+      time.innerHTML = parseInt(num.value) * 5.5;
+      delayToggle = false;
+    } else {
+      button.style.backgroundColor = 'red';
+      time.innerHTML = parseInt(num.value) * 10.5;
+      delayToggle = true;
+    }
+    
   }
 
   // Increment/decrement buttons
@@ -147,7 +172,11 @@
   const num = document.getElementById('num');
   num.addEventListener('input', function(){
     var time = document.getElementById('time');
-    time.innerHTML = parseInt(this.value) * 5.5;
+    if (!delayToggle) {
+      time.innerHTML = parseInt(num.value) * 5.5;
+    } else {
+      time.innerHTML = parseInt(num.value) * 10.5;
+    }
   });
 
   // Time remaining
@@ -180,8 +209,12 @@
   var total = document.getElementById('total');
   total.innerHTML = num;
 
-  startTimer(parseInt(num) * 5.5);
-
+  if (!delayToggle) {
+    startTimer(parseInt(num) * 5.5);
+    } else {
+      startTimer(parseInt(num) * 10.5);
+    }
+  
   await sleep(1000);
 
   performRandomSearches(num, count);
@@ -194,7 +227,7 @@ async function performRandomSearches(num, countElement) {
     var searchQuery = encodeURIComponent(randomWord);
     var searchUrl = 'https://www.bing.com/search?pglt=163&q=' + searchQuery + '&cvid=f8f3a7a7e3d24d01985f89c0333f4a1b&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQABhAMgYICBAAGEDSAQkxMDE3MGowajGoAgCwAgA&FORM=ANNTA1&PC=U531';
     var win = window.open(searchUrl, '_blank');
-    await sleep(5000);
+    await sleep(delay);
     win.close();
     await sleep(500);
   }
