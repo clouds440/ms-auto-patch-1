@@ -112,7 +112,7 @@
 
 <script>
     let delayToggle = false;
-    let delay = 5000;
+    let delay = 7000;
   //set default value for phones and desktops
   if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
       document.getElementById('num').value = 20; // Set default value to 20 for phones
@@ -133,25 +133,26 @@
 
     // Set time required
     if (!delayToggle) {
-      time.innerHTML = parseInt(num.value) * 5.5;
+      time.innerHTML = parseInt(num.value) * (delay/1000 + 0.5);
     } else {
-      time.innerHTML = parseInt(num.value) * 10.5;
+      time.innerHTML = parseInt(num.value) * (delay/1000 + 0.5);
     }
   }
 
   // Delay button function
   function setDelayTime() {
-    delay = 10000;
     var time = document.getElementById('time');
 
     const button = document.getElementById('delay');
     if (delayToggle) {
       button.style.backgroundColor = 'rgba(6, 144, 243, 0.836)';
-      time.innerHTML = parseInt(num.value) * 5.5;
+      delay = 7000;
+      time.innerHTML = parseInt(num.value) * (delay/1000 + 0.5);
       delayToggle = false;
     } else {
       button.style.backgroundColor = 'red';
-      time.innerHTML = parseInt(num.value) * 10.5;
+      delay = 12000;
+      time.innerHTML = parseInt(num.value) * (delay/1000 + 0.5);
       delayToggle = true;
     }
     
@@ -165,7 +166,7 @@
 
     // Set time required
     var time = document.getElementById('time');
-    time.innerHTML = num * 5.5;
+    time.innerHTML = num * (delay/1000 + 0.5);
   }
 
   // calculate total time required
@@ -173,9 +174,9 @@
   num.addEventListener('input', function(){
     var time = document.getElementById('time');
     if (!delayToggle) {
-      time.innerHTML = parseInt(num.value) * 5.5;
+      time.innerHTML = parseInt(num.value) * (delay/1000 + 0.5);
     } else {
-      time.innerHTML = parseInt(num.value) * 10.5;
+      time.innerHTML = parseInt(num.value) * (delay/1000 + 0.5);
     }
   });
 
@@ -210,9 +211,9 @@
   total.innerHTML = num;
 
   if (!delayToggle) {
-    startTimer(parseInt(num) * 5.5);
+    startTimer(parseInt(num) * (delay/1000 + 0.5));
     } else {
-      startTimer(parseInt(num) * 10.5);
+      startTimer(parseInt(num) * (delay/1000 + 0.5));
     }
   
   await sleep(1000);
