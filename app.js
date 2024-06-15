@@ -87,12 +87,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // Perform the specified number of random searches
     async function performRandomSearches(num) {
-      stopButton.classList.remove('hidden');
-      for (let i = 0; i < num && !stopLoop; i++) {
-        countDisplay.textContent = i + 1;
-        const randomWord = await getRandomWord();
-        const searchUrl = `https://www.bing.com/search?q=${encodeURIComponent(randomWord)}`;
-        const win = window.open(searchUrl, '_blank');
+      var btnStop = document.getElementById('btnStop');
+      btnStop.classList.remove('hidden');
+      for (var i = 0; i < num && !stopLoop; i++) {
+        countElement.innerHTML = i + 1;
+        var randomWord = await getRandomWord();
+        var searchQuery = encodeURIComponent(randomWord);
+        var searchUrl = 'https://www.bing.com/search?pglt=163&q=' + searchQuery + '&cvid=f8f3a7a7e3d24d01985f89c0333f4a1b&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQABhAMgYICBAAGEDSAQkxMDE3MGowajGoAgCwAgA&FORM=ANNTA1&PC=U531';
+        var win = window.open(searchUrl, '_blank');
         await sleep(delay);
         win.close();
         await sleep(500);
@@ -104,10 +106,13 @@ document.addEventListener('DOMContentLoaded', () => {
     async function getRandomWord() {
       try {
         const response = await fetch('words.json');
-        if (!response.ok) throw new Error('Failed to load words.json');
+        if (!response.ok) {
+          throw new Error('Failed to load words.json');
+        }
         const data = await response.json();
-        const randomIndex = Math.floor(Math.random() * data.length);
-        return data[randomIndex].word;
+        const randomIndex = Math.floor(Math.random() * data.data.length);
+        const randomWord = data.data[randomIndex].word;
+        return randomWord;
       } catch (error) {
         console.error('Error loading words.json:', error);
         return 'error';
