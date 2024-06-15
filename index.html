@@ -1,279 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Searcher</title>
-    <style>
-      .div {
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Searcher</title>
+  <style>
+    body {
+        background-color: #34495E;
         text-align: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: white;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .container {
         width: fit-content;
         margin: 0 auto;
-      }
-      input[type="number"]::-webkit-inner-spin-button,
-      input[type="number"]::-webkit-outer-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-      }
-
-      .input-field {
-        width: 97%;
-        padding-bottom: 15px;
-        padding-top: 15px;
-        margin-bottom: 20px;
-        margin-top: 20px;
+    }
+    .input-field {
+        width: 90%;
+    }
+    .input-field, .button {
+        padding: 11px;
+        margin: 10px 0;
         border-radius: 10px;
-        text-align: center;
         border: 2px solid rgba(6, 144, 243, 0.836);
-        box-shadow: 5px 2px 40px 2px;
-        background-color: aliceblue;
-      }
-      .input-field:focus {
-        background-color: #ddebfa;
+        text-align: center;
+        box-shadow: 5px 2px 40px 2px rgba(161, 172, 223, 0.75);
+    }
+    .input-field:focus {
+        background-color: #cde3fa;
         box-shadow: 10px 10px 50px 3px;
         outline: none;
-      }
-      .button-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 5px;
+    }
+    .button {
         width: 100%;
-        margin-top: 10px;
-      }
-      .button {
-        padding: 10px;
         background-color: rgba(6, 144, 243, 0.836);
         color: aliceblue;
         font-weight: bolder;
         font-size: larger;
         cursor: pointer;
-        border: 0px;
-        border-radius: 10px;
-      }
-      .button:hover {
+        border: 0;
+    }
+    .button:hover {
         background-color: rgba(38, 100, 170, 0.822);
-      }
-      .button-search {
-        margin-top: 20px;
-        width: 310px;
-        padding-left: 55px;
-        padding-right: 55px;
-      }
-      .font {
-        color: white;
-        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-weight: bolder;
-      }
-      .hidden {
+    }
+    .button-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+        width: 100%;
+    }
+    .hidden {
         display: none;
-      }
-    </style>
-  </head>
-<body bgcolor="#34495E">
-
-  <div class="div">
-    <h2 class="font">Automatic Searcher</h2>
-    <h3 class="font">
-      <span id="count">0</span>
-      <span>/</span>
-      <span id="total">0</span>
-      <span> Searches done</span>
-    </h3>
-    <form id="searchForm">
-      <label for="num" class="font">Enter the number of searches:</label><br>
-      <input type="number" id="num" name="num" min="1" max="50" class="input-field">
-      <br>
-  
-      <!-- Numerical buttons -->
-      <div class="button-container btn-div">
-          <button type="button" class="button" onclick="button(5)"> 5 </button>
-          <button type="button" class="button" onclick="button(30)"> 30 </button>
-
-          <button type="button" class="button" onclick="incDec(5)">▲5</button>
-
-          <button type="button" class="button" onclick="button(10)"> 10 </button>
-          <button type="button" class="button" onclick="button(35)"> 35 </button>
-
-          <button type="button" class="button" onclick="incDec(-5)">▼5</button>
-
-          <button type="button" class="button" onclick="button(20)"> 20 </button>
-          <button type="button" class="button" onclick="button(40)"> 40 </button>
-
-          <button type="button" class="button" id="delay" onclick="setDelayTime()"> Delay </button>
-      </div>
-      <br>
-      <div id="timeDiv" class="font">
-        <span>Total time required: </span>
-        <span id="time">0</span>
-        <span> Seconds</span>
-      </div>
-
-      <div id="timer" class="font"></div>
-
-      <input type="submit" value="Search" class="button button-search">
-    </form>
-
-    <button id="btnStop" class="button button-search hidden">Stop</button>
-  </div>
-
-<script>
-    let delayToggle = false;
-    let delay = 7000;
-    let stopLoop = true;
-    let intervalId;
-  //set default value for phones and desktops
-  if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-      document.getElementById('num').value = 20; // Set default value to 20 for phones
-    } else {
-      document.getElementById('num').value = 30; // Set default value to 30 for desktops
     }
-    // Make sure value is not negative or above 50
-    document.getElementById('num').addEventListener('blur', function() {
-    if (this.value < 1 || this.value > 50) {
-      this.value = 1;
-    }
-  });
+  </style>
+</head>
+<body>
 
-  // numeric buttons value
-  function button(value) {
-    var num = document.getElementById('num');
-    num.value = value;
+<div class="container">
+  <h2>Automatic Searcher</h2>
+  <h3><span id="count">0</span> / <span id="total">0</span> Searches done</h3>
+  <form id="searchForm">
+    <label for="num">Enter the number of searches:</label><br>
+    <input type="number" id="num" name="num" min="1" max="50" class="input-field">
+    <div class="button-container">
+      <button type="button" class="button" onclick="setNumber(5)">5</button>
+      <button type="button" class="button" onclick="setNumber(30)">30</button>
+      <button type="button" class="button" onclick="adjustNumber(5)">▲5</button>
+      <button type="button" class="button" onclick="setNumber(10)">10</button>
+      <button type="button" class="button" onclick="setNumber(35)">35</button>
+      <button type="button" class="button" onclick="adjustNumber(-5)">▼5</button>
+      <button type="button" class="button" onclick="setNumber(20)">20</button>
+      <button type="button" class="button" onclick="setNumber(40)">40</button>
+      <button type="button" class="button" id="delay" onclick="toggleDelay()">Delay</button>
+    </div>
+    <div id="timeDiv">Total time required: <span id="time">0</span> Seconds</div>
+    <div id="timer" class="hidden"></div>
+    <input type="submit" value="Search" class="button">
+  </form>
+  <button id="btnStop" class="button hidden">Stop</button>
+</div>
 
-    // Set time required
-    if (!delayToggle) {
-      time.innerHTML = parseInt(num.value) * (delay/1000 + 0.5);
-    } else {
-      time.innerHTML = parseInt(num.value) * (delay/1000 + 0.5);
-    }
-  }
-
-  // Delay button function
-  function setDelayTime() {
-    var time = document.getElementById('time');
-
-    const button = document.getElementById('delay');
-    if (delayToggle) {
-      button.style.backgroundColor = 'rgba(6, 144, 243, 0.836)';
-      delay = 7000;
-      time.innerHTML = parseInt(num.value) * (delay/1000 + 0.5);
-      delayToggle = false;
-    } else {
-      button.style.backgroundColor = 'red';
-      delay = 12000;
-      time.innerHTML = parseInt(num.value) * (delay/1000 + 0.5);
-      delayToggle = true;
-    }
-    
-  }
-
-  // Increment/decrement buttons
-  function incDec(value) {
-    var num = parseInt(document.getElementById('num').value);
-    num += value;
-    document.getElementById('num').value = num;
-
-    // Set time required
-    var time = document.getElementById('time');
-    time.innerHTML = num * (delay/1000 + 0.5);
-  }
-
-  // calculate total time required
-  const num = document.getElementById('num');
-  num.addEventListener('input', function(){
-    var time = document.getElementById('time');
-    if (!delayToggle) {
-      time.innerHTML = parseInt(num.value) * (delay/1000 + 0.5);
-    } else {
-      time.innerHTML = parseInt(num.value) * (delay/1000 + 0.5);
-    }
-  });
-
-  // Time remaining
-  function startTimer(duration) {
-    var timerDisplay = document.getElementById('timer');
-    var timer = duration;
-    document.getElementById('timeDiv').style.visibility = 'hidden';
-    timerDisplay.style.visibility = 'visible';
-
-    intervalId = setInterval(function() {
-      timerDisplay.textContent = timer + ' seconds remaining';
-      timer--;
-      if (timer < 0) {
-        clearInterval(intervalId); // Pass the interval ID to clearInterval
-        timerDisplay.style.visibility = 'hidden';
-        document.getElementById('timeDiv').style.visibility = 'visible';
-      }
-    }, 1000);
-  }
-
-  var sleep = function(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  // Stop button
-  var btnStop = document.getElementById('btnStop');
-  btnStop.addEventListener('click', async function(event) {
-    stopLoop = true;
-    clearInterval(intervalId);
-    document.getElementById('timer').style.visibility = 'hidden';
-    document.getElementById('timeDiv').style.visibility = 'visible';
-    btnStop.classList.add('hidden');
-  });
-
-  // Submit button to perform the searches
-  document.getElementById('searchForm').addEventListener('submit', async function(event) {
-  event.preventDefault();
-  stopLoop = false;
-  var num = document.getElementById('num').value;
-  var count = document.getElementById('count');
-  var total = document.getElementById('total');
-  total.innerHTML = num;
-
-  if (!delayToggle) {
-    startTimer(parseInt(num) * (delay/1000 + 0.5));
-    } else {
-      startTimer(parseInt(num) * (delay/1000 + 0.5));
-    }
-  
-  await sleep(1000);
-
-  performRandomSearches(num, count);
-});
-
-async function performRandomSearches(num, countElement) {
-  var btnStop = document.getElementById('btnStop');
-  btnStop.classList.remove('hidden');
-  for (var i = 0; i < num && !stopLoop; i++) {
-    countElement.innerHTML = i + 1;
-    var randomWord = await getRandomWord();
-    var searchQuery = encodeURIComponent(randomWord);
-    var searchUrl = 'https://www.bing.com/search?pglt=163&q=' + searchQuery + '&cvid=f8f3a7a7e3d24d01985f89c0333f4a1b&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQABhAMgYICBAAGEDSAQkxMDE3MGowajGoAgCwAgA&FORM=ANNTA1&PC=U531';
-    var win = window.open(searchUrl, '_blank');
-    await sleep(delay);
-    win.close();
-    await sleep(500);
-  }
-
-  btnStop.classList.add('hidden');
-}
-
-async function getRandomWord() {
-  try {
-    const response = await fetch('words.json');
-    if (!response.ok) {
-      throw new Error('Failed to load words.json');
-    }
-    const data = await response.json();
-    console.log(data); // Log the loaded data to check its structure and contents
-    const randomIndex = Math.floor(Math.random() * data.data.length);
-    const randomWord = data.data[randomIndex].word;
-    console.log(randomWord); // Log the random word to check if it's correctly extracted
-    return randomWord;
-  } catch (error) {
-    console.error('Error loading words.json:', error);
-    return 'error';
-  }
-}
-</script>
-
+<script src="app.js"></script>
 </body>
 </html>
