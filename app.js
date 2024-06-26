@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function getRandomWord() {
       try {
         // Array of chunked file names
-        const chunks = ['words1.json', 'words2.json', 'words3.json', 'words4.json', 'words5.json', 'words6.json']; // Add more as needed
+        const chunks = ['words1.json', 'words2.json', 'words3.json', 'words4.json', 'words5.json', 'words6.json', 'words7.json', 'words8.json', 'words9.json']; // Add more as needed
         // Select a random chunk
         const randomChunk = chunks[Math.floor(Math.random() * chunks.length)];
         
