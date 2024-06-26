@@ -102,34 +102,29 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // Fetch a random word from a JSON file
     async function getRandomWord() {
-  try {
-    const response = await fetch('words.json', { method: 'GET', cache: 'no-cache' });
-    if (!response.ok) {
-      throw new Error(`Failed to load words.json: ${response.statusText}`);
+      try {
+        // Array of chunked file names
+        const chunks = ['words1.json', 'words2.json', 'words3.json', 'words4.json', 'words5.json', 'words6.json']; // Add more as needed
+        // Select a random chunk
+        const randomChunk = chunks[Math.floor(Math.random() * chunks.length)];
+        
+        console.log(`Fetching: ${randomChunk}`); // Log the chosen chunk
+        
+        const response = await fetch(randomChunk);
+        if (!response.ok) {
+          throw new Error(`Failed to load ${randomChunk}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        const words = Object.keys(data); // Extract the keys (words) from the JSON object
+        const randomIndex = Math.floor(Math.random() * words.length); // Get a random index
+        const randomWord = words[randomIndex]; // Get the word at the random index
+        return randomWord;
+      } catch (error) {
+        console.error('Error loading words.json:', error);
+        return 'error';
+      }
     }
-
-    // Use streaming API if necessary
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let result = '';
-    let done = false;
-
-    while (!done) {
-      const { value, done: readerDone } = await reader.read();
-      done = readerDone;
-      result += decoder.decode(value);
-    }
-
-    const data = JSON.parse(result);
-    const words = Object.keys(data);
-    const randomIndex = Math.floor(Math.random() * words.length);
-    const randomWord = words[randomIndex];
-    return randomWord;
-  } catch (error) {
-    console.error('Error loading words.json:', error);
-    return 'error';
-  }
-}
   
     // Utility function to create a delay
     function sleep(ms) {
