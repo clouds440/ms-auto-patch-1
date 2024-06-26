@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
       for (let i = 0; i < num && !stopLoop; i++) {
         countDisplay.textContent = i + 1;
         const randomWord = await getRandomWord();
+        console.log(randomWord);
         const searchUrl = "https://www.bing.com/search?q=${encodeURIComponent(randomWord)}" + "&cvid=f8f3a7a7e3d24d01985f89c0333f4a1b&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQABhAMgYICBAAGEDSAQkxMDE3MGowajGoAgCwAgA&FORM=ANNTA1&PC=U531";
         const win = window.open(searchUrl, '_blank');
         await sleep(delay);
