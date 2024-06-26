@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
       for (let i = 0; i < num && !stopLoop; i++) {
         countDisplay.textContent = i + 1;
         const randomWord = await getRandomWord();
-        const searchUrl = `https://www.bing.com/search?q=${encodeURIComponent(randomWord)}` + '&cvid=f8f3a7a7e3d24d01985f89c0333f4a1b&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQABhAMgYICBAAGEDSAQkxMDE3MGowajGoAgCwAgA&FORM=ANNTA1&PC=U531';
+        const searchUrl = "https://www.bing.com/search?q=${encodeURIComponent(randomWord)}" + "&cvid=f8f3a7a7e3d24d01985f89c0333f4a1b&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQABhAMgYICBAAGEDSAQkxMDE3MGowajGoAgCwAgA&FORM=ANNTA1&PC=U531";
         const win = window.open(searchUrl, '_blank');
         await sleep(delay);
         win.close();
@@ -103,13 +103,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fetch a random word from a JSON file
     async function getRandomWord() {
       try {
-        const response = await fetch('words.json');
+        const response = await fetch('words_dictionary.json');
         if (!response.ok) {
           throw new Error('Failed to load words.json');
         }
         const data = await response.json();
-        const randomIndex = Math.floor(Math.random() * data.data.length);
-        const randomWord = data.data[randomIndex].word;
+        const words = Object.keys(data);
+        const randomIndex = Math.floor(Math.random() * words.length);
+        const randomWord = words[randomIndex];
         return randomWord;
       } catch (error) {
         console.error('Error loading words.json:', error);
