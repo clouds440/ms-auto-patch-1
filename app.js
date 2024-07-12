@@ -7,14 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const stopButton = document.getElementById('btnStop');
     const countDisplay = document.getElementById('count');
     const totalDisplay = document.getElementById('total');
-
-    window.toggleDelay();
   
     // Default delay and toggle state
     let delay = 7000;
     let delayEnabled = false;
     let stopLoop = true;
     let intervalId;
+
+    // Set Delay toggled ON by default
+    window.toggleDelay();
   
     // Set default value based on the device type
     numInput.value = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 20 : 30;
