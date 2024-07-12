@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // Default delay and toggle state
     let delay = 7000;
-    let delayEnabled = false;
+    let delayEnabled = true;
     let stopLoop = true;
     let intervalId;
   
