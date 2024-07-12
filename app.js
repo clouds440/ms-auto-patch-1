@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const stopButton = document.getElementById('btnStop');
     const countDisplay = document.getElementById('count');
     const totalDisplay = document.getElementById('total');
+
+    window.toggleDelay();
   
     // Default delay and toggle state
     let delay = 7000;
