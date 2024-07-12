@@ -13,9 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let delayEnabled = false;
     let stopLoop = true;
     let intervalId;
-
-    // Set Delay toggled ON by default
-    window.toggleDelay();
   
     // Set default value based on the device type
     numInput.value = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 20 : 30;
@@ -53,6 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
       delayButton.style.backgroundColor = delayEnabled ? 'red' : 'rgba(6, 144, 243, 0.836)';
       updateTime();
     };
+    
+    // Set Delay toggled ON by default
+    window.toggleDelay();
   
     // Start a countdown timer for the duration of the search
     function startTimer(duration) {
