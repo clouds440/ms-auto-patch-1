@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
           
         await sleep(delay);
         win.close();
-        await sleep(500);
+        await sleep(1000);
       }
       stopButton.classList.add('hidden');
     }
