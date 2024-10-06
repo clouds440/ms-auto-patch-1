@@ -96,11 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const randomWord = await getRandomWord();
         const searchUrl = "https://www.bing.com/search?q=" + randomWord + "&cvid=f8f3a7a7e3d24d01985f89c0333f4a1b&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQABhAMgYICBAAGEDSAQkxMDE3MGowajGoAgCwAgA&FORM=ANNTA1&PC=U531";
         const win = window.open(searchUrl, '_blank');
-
-        // Wait for the window to load
-        await new Promise(resolve => {
-          win.addEventListener('load', resolve);
-        });
           
         await sleep(delay);
         win.close();
