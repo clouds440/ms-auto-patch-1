@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // Function to update the total time required
     function updateTime() {
-      timeDisplay.textContent = Math.ceil(numInput.value * (delay / 1000 + 0.5));
+      timeDisplay.textContent = Math.ceil(numInput.value * (delay / 1000 + 1));
     }
   
     // Set the number input value and update the time
