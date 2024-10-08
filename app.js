@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
       stopLoop = false;
       const num = numInput.value;
       totalDisplay.textContent = num;
-      startTimer(Math.ceil(num * (delay / 1000 + 0.5)));
+      startTimer(Math.ceil(num * (delay / 1000 + 1)));
       await sleep(1000);
       performRandomSearches(num);
     });
