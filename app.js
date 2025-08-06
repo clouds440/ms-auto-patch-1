@@ -89,20 +89,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   
     // Perform the specified number of random searches
-    async function performRandomSearches(num) {
-      stopButton.classList.remove('hidden');
-      for (let i = 0; i < num && !stopLoop; i++) {
-        countDisplay.textContent = i + 1;
-        const randomWord = await getRandomWord();
-        const searchUrl = "https://www.bing.com/search?q=" + randomWord + "&cvid=f8f3a7a7e3d24d01985f89c0333f4a1b&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQABhAMgYICBAAGEDSAQkxMDE3MGowajGoAgCwAgA&FORM=ANNTA1&PC=U531";
-        const win = window.open(searchUrl, '_blank');
-          
-        await sleep(delay);
-        win.close();
-        await sleep(1000);
-      }
-      stopButton.classList.add('hidden');
+    const formOptions = [
+    "ANNTA1",
+    "EDGE01",
+    "WNSGPH",
+    "MOZTS1",
+    "BINGDS",
+    "QBRE",
+  ];
+  const pcOptions = ["U531", "HCTS", "U523", "WIN10", "DFTS"];
+
+  const form = formOptions[Math.floor(Math.random() * formOptions.length)];
+  const pc = pcOptions[Math.floor(Math.random() * pcOptions.length)];
+
+  const cvids = [
+    "f8f3a7a7e3d24d01985f89c0333f4a1b",
+    "6193e6d379514e41a38db213882442f3",
+    "6a0562c56de74394836aa1769aeea452",
+    "84610ea6ba9145dab1b59753fc9ae4f6",
+    "b0c8f1d2e3a04f9c8b4d5c6e7f8a9b0c",
+    "c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6",
+    "d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2",
+    "e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8",
+    "f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4",
+  ];
+  const gs_lcrps = [
+    "EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQABhAMgYICBAAGEDSAQkxMDE3MGowajGoAgCwAgA",
+    "EgRlZGdlKgYIABBFGDkyBggAEEUYOTIGCAEQABhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhA0gEINTE1MWowajSoAgiwAgE",
+    "EgRlZGdlKgYIBRAAGEAyBwgAEAAY-QcyBggBEEUYOTIGCAIQABhAMgYIAxAAGEAyBggEEAAYQDIGCAUQABhAMgYIBhAAGEAyBggHEAAYQDIGCAgQABhA0gEJMTE0MjFqMGoxqAIIsAIB",
+    "EgRlZGdlKgYIABBFGDkyBggAEEUYOdIBCDI4NDlqMGoxqAIAsAIA",
+  ];
+  const cvid = cvids[Math.floor(Math.random() * cvids.length)];
+  const gs_lcrp = cvids[Math.floor(Math.random() * gs_lcrps.length)];
+  async function performRandomSearches(num) {
+    stopButton.classList.remove("hidden");
+    for (let i = 0; i < num && !stopLoop; i++) {
+      countDisplay.textContent = i + 1;
+      const randomWord = await getRandomWord();
+      const searchUrl =
+        "https://www.bing.com/search?q=" +
+        randomWord +
+        `&cvid=${cvid}&gs_lcrp=${gs_lcrp}&FORM=${form}&PC=${pc}`;
+      const win = window.open(searchUrl, "_blank");
+      await sleep(delay);
+      win.close();
+      await sleep(500);
     }
+    stopButton.classList.add("hidden");
+  }
   
     // Fetch a random word from a JSON file
     async function getRandomWord() {
@@ -138,3 +172,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize time display
     updateTime();
   });  
+
