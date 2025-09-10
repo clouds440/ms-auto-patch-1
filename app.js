@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to update the total time required
     function updateTime() {
-      timeDisplay.textContent = Math.ceil(numInput.value * (delay / 1000 + 1));
+      timeDisplay.textContent = Math.ceil(numInput.value * (delay / 2000 + 1));
     }
 
     // Set the number input value and update the time
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Toggle delay between two values and update button color and time
     window.toggleDelay = function () {
       delayEnabled = !delayEnabled;
-      delay = delayEnabled ? 12000 : 7000;
+      delay = delayEnabled ? 16000 : 7000;
       delayButton.style.backgroundColor = delayEnabled ? 'red' : 'rgba(6, 144, 243, 0.836)';
       updateTime();
     };
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const num = numInput.value;
       totalDisplay.textContent = num;
       startTimer(Math.ceil(num * (delay / 1000 + 1)));
-      await sleep(1000);
+      await sleep(2000);
       performRandomSearches(num);
     });
 
@@ -138,3 +138,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize time display
     updateTime();
   });
+
