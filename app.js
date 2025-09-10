@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to update the total time required
     function updateTime() {
-      timeDisplay.textContent = Math.ceil(numInput.value * (delay / 2000 + 1));
+      timeDisplay.textContent = Math.ceil(numInput.value * ((delay + 2000) / 1000 + 1));
     }
 
     // Set the number input value and update the time
@@ -83,8 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
       stopLoop = false;
       const num = numInput.value;
       totalDisplay.textContent = num;
-      startTimer(Math.ceil(num * (delay / 1000 + 1)));
-      await sleep(2000);
+      startTimer(Math.ceil(num * ((delay + 2000) / 1000 + 1)));
+      await sleep(1000);
       performRandomSearches(num);
     });
 
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         await sleep(delay);
         win.close();
-        await sleep(1000);
+        await sleep(2000);
       }
       stopButton.classList.add('hidden');
     }
@@ -138,4 +138,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize time display
     updateTime();
   });
+
 
