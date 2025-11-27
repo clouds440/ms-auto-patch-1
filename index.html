@@ -9,7 +9,7 @@
   <style>
     :root {
       --primary: #6C63FF;
-      --primary-dark: #5A52D5;
+      --primary-dark: #584ed8;
       --secondary: #FF6584;
       --dark-bg: #121212;
       --dark-surface: #1E1E1E;
@@ -17,6 +17,7 @@
       --text-primary: #FFFFFF;
       --text-secondary: #B0B0B0;
       --error: #F44336;
+      --success: #4CAF50;
     }
 
     * {
@@ -26,9 +27,9 @@
     }
 
     body {
-      background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1a2e 100%);
+      background: linear-gradient(135deg, var(--dark-bg), #1a1a2e);
       color: var(--text-primary);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -50,6 +51,7 @@
       text-align: center;
       margin-bottom: 5px;
       background: linear-gradient(90deg, var(--primary), var(--secondary));
+      background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
     }
@@ -57,7 +59,47 @@
     h3 {
       text-align: center;
       color: var(--text-secondary);
-      margin-bottom: 20px;
+      margin-bottom: 15px;
+      font-weight: 400;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      width: 100%;
+      height: 28px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 15px;
+      backdrop-filter: blur(6px);
+    }
+
+    .progress-bar {
+      height: 26px;
+      width: 100%;
+      background: #333;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 1px;
+    }
+
+    #progressFill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #066cf3, #0ac4ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: width 0.25s ease-out;
+      position: relative;
+    }
+
+    #progressText {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    pointer-events: none;
+    text-shadow: 0 0 4px black;
     }
 
     .input-field {
@@ -75,7 +117,7 @@
     .input-field:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.2);
     }
 
     .button-container {
@@ -94,12 +136,22 @@
       cursor: pointer;
       font-weight: 600;
       transition: all 0.3s ease;
-      font-size: 1rem;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     .button:hover {
       background: var(--primary);
       transform: translateY(-2px);
+    }
+
+    /* Delay toggle active state */
+    .delay-active {
+      background: var(--primary-dark) !important;
+      color: white !important;
     }
 
     #timeDiv {
@@ -143,7 +195,7 @@
     }
 
     #btnStop:hover {
-      background: #d32f2f;
+      background: #d7362f;
     }
 
     .hidden {
@@ -157,30 +209,65 @@
 
 <div class="container">
   <h2><i class="fas fa-search"></i> Search Assistant</h2>
-  <h3><span id="count">0</span> / <span id="total">0</span> Searches done</h3>
+
+  <h3><span id="count">0</span> / <span id="total">0</span> Searches Done</h3>
+
+  <div class="progress-container">
+    <div class="progress-bar">
+      <div id="progressFill"></div>
+    </div>
+  </div>
 
   <form id="searchForm">
+
     <label for="num">Number of searches:</label>
     <input type="number" id="num" name="num" min="1" max="50" class="input-field">
 
     <div class="button-container">
-      <button type="button" class="button" onclick="setNumber(5)">5</button>
-      <button type="button" class="button" onclick="setNumber(30)">30</button>
-      <button type="button" class="button" onclick="adjustNumber(5)">+5</button>
 
-      <button type="button" class="button" onclick="setNumber(10)">10</button>
-      <button type="button" class="button" onclick="setNumber(35)">35</button>
-      <button type="button" class="button" onclick="adjustNumber(-5)">-5</button>
+      <button type="button" class="button" onclick="setNumber(5)">
+        <i class="fas fa-bolt"></i> 5
+      </button>
 
-      <button type="button" class="button" onclick="setNumber(20)">20</button>
-      <button type="button" class="button" onclick="setNumber(40)">40</button>
-      <button type="button" class="button" id="delay" onclick="toggleDelay()">Delay</button>
+      <button type="button" class="button" onclick="setNumber(30)">
+        <i class="fas fa-gauge-high"></i> 30
+      </button>
+
+      <button type="button" class="button" style="background-color: #3c693e;" onclick="adjustNumber(5)">
+        <i class="fas fa-plus"></i> 5
+      </button>
+
+      <button type="button" class="button" onclick="setNumber(10)">
+        <i class="fas fa-rocket"></i> 10
+      </button>
+
+      <button type="button" class="button" onclick="setNumber(35)">
+        <i class="fas fa-forward"></i> 35
+      </button>
+
+      <button type="button" class="button" style="background-color: #ff7b2f;" onclick="adjustNumber(-5)">
+        <i class="fas fa-minus"></i> 5
+      </button>
+
+      <button type="button" class="button" onclick="setNumber(20)">
+        <i class="fas fa-fire"></i> 20
+      </button>
+
+      <button type="button" class="button" onclick="setNumber(40)">
+        <i class="fas fa-running"></i> 40
+      </button>
+
+      <button type="button" class="button" id="delay" onclick="toggleDelay()">
+        <i class="fas fa-clock"></i> <span id="delayLabel">Delay: 16s</span>
+      </button>
     </div>
 
     <div id="timeDiv">Total time required: <span id="time">0</span> seconds</div>
+
     <div id="timer" class="hidden"></div>
 
-    <input type="submit" value="Search" class="main-action">
+    <input type="submit" id="btnSearch" value="Search" class="main-action">
+
   </form>
 
   <button id="btnStop" class="main-action hidden">Stop</button>
