@@ -3,88 +3,191 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Searcher</title>
+  <title>Search Assistant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
+    :root {
+      --primary: #6C63FF;
+      --primary-dark: #5A52D5;
+      --secondary: #FF6584;
+      --dark-bg: #121212;
+      --dark-surface: #1E1E1E;
+      --dark-card: #252525;
+      --text-primary: #FFFFFF;
+      --text-secondary: #B0B0B0;
+      --error: #F44336;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-        background-color: #34495E;
-        text-align: center;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: white;
+      background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1a2e 100%);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
     }
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+
     .container {
-        width: 250px;
-        margin: 0 auto;
+      background: var(--dark-card);
+      border-radius: 20px;
+      padding: 30px;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
+
+    h2 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    h3 {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
     .input-field {
-        width: 90%;
+      width: 100%;
+      padding: 15px;
+      background: var(--dark-surface);
+      border: 2px solid #333;
+      border-radius: 12px;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
     }
-    .input-field, .button {
-        padding: 11px;
-        margin: 10px 0;
-        border-radius: 10px;
-        border: 2px solid rgba(6, 144, 243, 0.836);
-        text-align: center;
-        box-shadow: 5px 2px 40px 2px rgba(161, 172, 223, 0.75);
-    }
+
     .input-field:focus {
-        background-color: #cde3fa;
-        box-shadow: 10px 10px 50px 3px;
-        outline: none;
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
     }
-    .button {
-        width: 100%;
-        background-color: rgba(6, 144, 243, 0.836);
-        color: aliceblue;
-        font-weight: bolder;
-        font-size: larger;
-        cursor: pointer;
-        border: 0;
-    }
-    .button:hover {
-        background-color: rgba(38, 100, 170, 0.822);
-    }
+
     .button-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 5px;
-        width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
     }
+
+    .button {
+      background: var(--dark-surface);
+      border: none;
+      border-radius: 12px;
+      color: var(--text-primary);
+      padding: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .button:hover {
+      background: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    #timeDiv {
+      background: var(--dark-surface);
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 15px;
+      color: var(--text-secondary);
+    }
+
+    #timer {
+      font-size: 1.6rem;
+      text-align: center;
+      margin-top: 10px;
+      color: var(--primary);
+    }
+
+    .main-action {
+      background: var(--primary);
+      color: white !important;
+      width: 100%;
+      padding: 15px;
+      margin-top: 10px;
+      border-radius: 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: 0.3s;
+      font-weight: 700;
+    }
+
+    .main-action:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    #btnStop {
+      background: var(--error);
+      color: white !important;
+    }
+
+    #btnStop:hover {
+      background: #d32f2f;
+    }
+
     .hidden {
-        display: none;
+      display: none;
     }
+
   </style>
+
 </head>
 <body>
 
 <div class="container">
-  <h2>Automatic Searcher</h2>
+  <h2><i class="fas fa-search"></i> Search Assistant</h2>
   <h3><span id="count">0</span> / <span id="total">0</span> Searches done</h3>
+
   <form id="searchForm">
-    <label for="num">Enter the number of searches:</label><br>
+    <label for="num">Number of searches:</label>
     <input type="number" id="num" name="num" min="1" max="50" class="input-field">
+
     <div class="button-container">
       <button type="button" class="button" onclick="setNumber(5)">5</button>
       <button type="button" class="button" onclick="setNumber(30)">30</button>
-      <button type="button" class="button" onclick="adjustNumber(5)">▲5</button>
+      <button type="button" class="button" onclick="adjustNumber(5)">+5</button>
+
       <button type="button" class="button" onclick="setNumber(10)">10</button>
       <button type="button" class="button" onclick="setNumber(35)">35</button>
-      <button type="button" class="button" onclick="adjustNumber(-5)">▼5</button>
+      <button type="button" class="button" onclick="adjustNumber(-5)">-5</button>
+
       <button type="button" class="button" onclick="setNumber(20)">20</button>
       <button type="button" class="button" onclick="setNumber(40)">40</button>
       <button type="button" class="button" id="delay" onclick="toggleDelay()">Delay</button>
     </div>
-    <div id="timeDiv">Total time required: <span id="time">0</span> Seconds</div>
+
+    <div id="timeDiv">Total time required: <span id="time">0</span> seconds</div>
     <div id="timer" class="hidden"></div>
-    <input type="submit" value="Search" class="button">
+
+    <input type="submit" value="Search" class="main-action">
   </form>
-  <button id="btnStop" class="button hidden">Stop</button>
+
+  <button id="btnStop" class="main-action hidden">Stop</button>
+
 </div>
 
 <script src="app.js"></script>
+
 </body>
 </html>
