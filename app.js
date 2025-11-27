@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const countDisplay = document.getElementById('count');
     const totalDisplay = document.getElementById('total');
     const btnSearch = document.getElementById('btnSearch');
+    const progressFill = document.getElementById("progressFill");
+    const progressText = document.getElementById("progressText");
 
     // Default delay and toggle state
     let delay = 7000;
@@ -73,14 +75,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateProgress(count, total) {
-      const fill = document.getElementById("progressFill");
-      const text = document.getElementById("progressText");
 
       const percent = total === 0 ? 0 : Math.round((count / total) * 100);
 
-      fill.style.width = percent + "%";
-      text.textContent = percent + "%";
+      progressFill.style.width = percent + "%";
+      progressText.textContent = percent + "%";
+      // Pulse effect only during progress
+      if (percent > 0 && percent < 100) {
+          progressFill.classList.add("active-progress");
+      } else {
+          progressFill.classList.remove("active-progress");
       }
+    }
 
     // Stop the search loop and hide the timer
     stopButton.addEventListener('click', () => {
