@@ -2,11 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // DOM elements
     const numInput = document.getElementById('num');
     const delayButton = document.getElementById('delay');
+    const delayLabel = document.getElementById('delayLabel');
     const timeDisplay = document.getElementById('time');
     const timerDisplay = document.getElementById('timer');
     const stopButton = document.getElementById('btnStop');
     const countDisplay = document.getElementById('count');
     const totalDisplay = document.getElementById('total');
+    const btnSearch = document.getElementById('btnSearch');
 
     // Default delay and toggle state
     let delay = 7000;
@@ -48,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
       delayEnabled = !delayEnabled;
       delay = delayEnabled ? 16000 : 7000;
       delayButton.style.backgroundColor = delayEnabled ? 'red' : 'rgba(6, 144, 243, 0.836)';
+      delayLabel.textContent = delayEnabled ? 'Delay: 16s' : 'Delay: 7s';
       updateTime();
     };
 
@@ -68,6 +71,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }, 1000);
     }
+
+    function updateProgress(count, total) {
+      const fill = document.getElementById("progressFill");
+      const text = document.getElementById("progressText");
+
+      const percent = total === 0 ? 0 : Math.round((count / total) * 100);
+
+      fill.style.width = percent + "%";
+      text.textContent = percent + "%";
+      }
 
     // Stop the search loop and hide the timer
     stopButton.addEventListener('click', () => {
@@ -91,8 +104,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Perform the specified number of random searches
     async function performRandomSearches(num) {
       stopButton.classList.remove('hidden');
+      btnSearch.classList.add('hidden');
       for (let i = 0; i < num && !stopLoop; i++) {
         countDisplay.textContent = i + 1;
+        updateProgress(i + 1, num);
         const randomWord = await getRandomWord();
         const searchUrl = "https://www.bing.com/search?q=" + randomWord + "&cvid=f8f3a7a7e3d24d01985f89c0333f4a1b&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQLhhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQABhAMgYICBAAGEDSAQkxMDE3MGowajGoAgCwAgA&FORM=ANNTA1&PC=U531";
         const win = window.open(searchUrl, '_blank');
@@ -102,6 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
         await sleep(2000);
       }
       stopButton.classList.add('hidden');
+      btnSearch.classList.remove('hidden');
+      updateProgress(0, num);
     }
 
     // Fetch a random word from a JSON file
@@ -138,5 +155,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize time display
     updateTime();
   });
-
-
