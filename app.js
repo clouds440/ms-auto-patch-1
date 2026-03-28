@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let intervalId;
 
     // Set default value based on the device type
-    numInput.value = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 20 : 30;
+    numInput.value = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 10 : 10;
 
     // Ensure input value is within bounds
     numInput.addEventListener('blur', () => {
