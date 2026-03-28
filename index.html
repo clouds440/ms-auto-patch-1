@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Search Assistant | Hyperglass Edition</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- canvas confetti (lightweight, non‑blocking) -->
@@ -30,10 +30,10 @@
       background: radial-gradient(circle at 20% 30%, #0a0f1e, #03050b);
       color: var(--text-primary);
       font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
-      min-height: 100vh;
+      min-height: 90vh;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: top;
       padding: 20px;
       position: relative;
       overflow-x: hidden;
@@ -63,8 +63,8 @@
     /* original .container becomes glass card */
     .container {
       background: var(--glass-bg);
-      backdrop-filter: blur(14px) saturate(180%);
       -webkit-backdrop-filter: blur(14px) saturate(180%);
+      backdrop-filter: blur(14px) saturate(180%);
       border-radius: 2rem;
       border: 1px solid var(--glass-border);
       box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(108, 99, 255, 0.3) inset;
@@ -85,8 +85,8 @@
       margin-bottom: 5px;
       background: linear-gradient(135deg, #fff, #b3aaff, var(--primary), var(--secondary));
       background-size: 300% auto;
-      background-clip: text;
       -webkit-background-clip: text;
+      background-clip: text;
       color: transparent;
       animation: textShimmer 6s linear infinite;
       display: flex;
@@ -141,14 +141,14 @@
       height: 100%;
       background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
       background-size: 200% auto;
-      transition: width 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      transition: width 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
       position: relative;
       display: flex;
       align-items: center;
       justify-content: flex-end;
       padding-right: 15px;
       box-shadow: 0 0 12px rgba(108, 99, 255, 0.6);
-      animation: fillPulse 1.8s ease infinite;
+      animation: fillPulse 1.5s ease infinite;
     }
 
     #progressFill::after {
@@ -166,7 +166,7 @@
     }
     @keyframes fillPulse {
       0% { box-shadow: 0 0 2px var(--primary); }
-      50% { box-shadow: 0 0 18px var(--secondary); }
+      50% { box-shadow: 0 0 12px var(--secondary); }
       100% { box-shadow: 0 0 2px var(--primary); }
     }
 
@@ -190,6 +190,7 @@
       margin-bottom: 20px;
       font-size: 1rem;
       transition: all 0.3s ease;
+      -webkit-backdrop-filter: blur(2px);
       backdrop-filter: blur(4px);
     }
 
@@ -207,29 +208,58 @@
       margin-bottom: 20px;
     }
 
-    .button {
-      background: rgba(20, 28, 45, 0.7);
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(108, 99, 255, 0.6);
-      border-radius: 40px;
-      color: var(--text-primary);
-      padding: 10px 0;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s ease;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
+  .button {
+  background: rgba(20, 28, 45, 0.7);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(4px);
+  border-radius: 40px;
+  color: var(--text-primary);
+  padding: 10px 0;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.4s ease;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
-    .button:hover {
-      background: var(--primary);
-      transform: translateY(-3px);
-      border-color: white;
-      box-shadow: 0 8px 20px rgba(108, 99, 255, 0.4);
-    }
+  /* default border */
+  border: 1px solid rgba(108, 99, 255, 0.6);
+}
+
+.button:hover {
+  background: var(--primary);
+  transform: translateY(-3px);
+  border-color: white;
+  box-shadow: 0 8px 20px rgba(108, 99, 255, 0.4);
+  transform: scale(1.2);
+  border-radius: 15px;
+}
+
+/* variants */
+.button--add {
+  background-color: #3c693e;
+  border-color: rgba(60, 105, 62, 0.6);
+}
+
+.button--add:hover {
+  background: #0b4208;
+  border-color: rgba(12, 75, 9, 0.8);
+  box-shadow: 0 8px 20px rgba(46, 79, 44, 0.4);
+}
+
+.button--subtract {
+  background-color: #ff7b2f;
+  border-color: rgba(255, 123, 47, 0.6);
+}
+
+.button--subtract:hover {
+  background: #ff4b2b;
+  border-color: rgba(255, 75, 43, 0.8);
+  box-shadow: 0 8px 20px rgba(255, 75, 43, 0.4);
+}
+
 
     /* delay active state (kept same class) */
     .delay-active {
@@ -241,6 +271,7 @@
     /* time info panel */
     #timeDiv {
       background: rgba(0, 0, 0, 0.4);
+      -webkit-backdrop-filter: blur(2px);
       backdrop-filter: blur(5px);
       padding: 12px;
       border-radius: 40px;
@@ -343,7 +374,7 @@
         <button type="button" class="button" onclick="setNumber(30)">
           <i class="fas fa-gauge-high"></i> 30
         </button>
-        <button type="button" class="button" style="background-color: #3c693e;" onclick="adjustNumber(5)">
+        <button type="button" id="add-button" class="button button--add" onclick="adjustNumber(5)">
           <i class="fas fa-plus"></i> 5
         </button>
         <button type="button" class="button" onclick="setNumber(10)">
@@ -352,7 +383,7 @@
         <button type="button" class="button" onclick="setNumber(35)">
           <i class="fas fa-forward"></i> 35
         </button>
-        <button type="button" class="button" style="background-color: #ff7b2f;" onclick="adjustNumber(-5)">
+        <button type="button" id="subtract-button" class="button button--subtract" onclick="adjustNumber(-5)">
           <i class="fas fa-minus"></i> 5
         </button>
         <button type="button" class="button" onclick="setNumber(20)">
