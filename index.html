@@ -2,22 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Search Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Search Assistant | Hyperglass Edition</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+  <!-- canvas confetti (lightweight, non‑blocking) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
   <style>
+    /* ========= GLOBAL RESET & CUSTOM PROPS ========= */
     :root {
       --primary: #6C63FF;
       --primary-dark: #584ed8;
       --secondary: #FF6584;
-      --dark-bg: #121212;
-      --dark-surface: #1E1E1E;
-      --dark-card: #252525;
-      --text-primary: #FFFFFF;
-      --text-secondary: #B0B0B0;
-      --error: #F44336;
-      --success: #4CAF50;
+      --dark-bg: #0a0c15;
+      --glass-bg: rgba(20, 28, 45, 0.4);
+      --glass-border: rgba(108, 99, 255, 0.5);
+      --text-primary: #ffffff;
+      --text-secondary: #b0b8d0;
     }
 
     * {
@@ -27,58 +27,111 @@
     }
 
     body {
-      background: linear-gradient(135deg, var(--dark-bg), #1a1a2e);
+      background: radial-gradient(circle at 20% 30%, #0a0f1e, #03050b);
       color: var(--text-primary);
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: start;
+      align-items: center;
       padding: 20px;
+      position: relative;
+      overflow-x: hidden;
     }
 
+    /* ========= PARTICLE CANVAS (background eye candy) ========= */
+    #particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* ========= MAIN CONTAINER (3D tilt wrapper) ========= */
+    .tilt-wrapper {
+      perspective: 1200px;
+      width: 100%;
+      max-width: 550px;
+      z-index: 10;
+      transition: transform 0.2s ease-out;
+    }
+
+    /* original .container becomes glass card */
     .container {
-      background: var(--dark-card);
-      border-radius: 20px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(14px) saturate(180%);
+      -webkit-backdrop-filter: blur(14px) saturate(180%);
+      border-radius: 2rem;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(108, 99, 255, 0.3) inset;
       padding: 30px;
       width: 100%;
-      max-width: 450px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     }
 
+    .container:hover {
+      border-color: rgba(108, 99, 255, 0.9);
+      box-shadow: 0 30px 55px rgba(0, 0, 0, 0.5), 0 0 0 2px rgba(108, 99, 255, 0.4) inset;
+    }
+
+    /* ========= TYPOGRAPHY & GLOW ========= */
     h2 {
       font-size: 2rem;
       text-align: center;
       margin-bottom: 5px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      background: linear-gradient(135deg, #fff, #b3aaff, var(--primary), var(--secondary));
+      background-size: 300% auto;
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
+      animation: textShimmer 6s linear infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    h2 i {
+      background: none;
+      color: rgba(108, 99, 255, 0.9);
+      filter: drop-shadow(0 0 5px #6C63FF);
     }
 
     h3 {
       text-align: center;
       color: var(--text-secondary);
-      margin-bottom: 15px;
-      font-weight: 400;
+      margin-bottom: 20px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      font-size: 1rem;
     }
 
-    /* Progress Bar */
+    @keyframes textShimmer {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    /* ========= PROGRESS BAR (enhanced) ========= */
     .progress-container {
       width: 100%;
-      height: 32px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      margin-bottom: 5px;
+      height: 38px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 40px;
+      margin-bottom: 8px;
       overflow: hidden;
       position: relative;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+      border: 1px solid rgba(108, 99, 255, 0.5);
     }
 
     .progress-bar {
       width: 100%;
       height: 100%;
-      border-radius: 16px;
+      border-radius: 40px;
       overflow: hidden;
       position: relative;
     }
@@ -86,234 +139,337 @@
     #progressFill {
       width: 0%;
       height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+      background-size: 200% auto;
+      transition: width 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
       position: relative;
-      box-shadow: 0 0 20px rgba(108, 99, 255, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 15px;
+      box-shadow: 0 0 12px rgba(108, 99, 255, 0.6);
+      animation: fillPulse 1.8s ease infinite;
     }
 
-    /* Shimmer effect */
     #progressFill::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg,
-          rgba(255,255,255,0.2) 0%,
-          rgba(255,255,255,0.1) 50%,
-          rgba(255,255,255,0.2) 100%);
-      background-size: 200% 100%;
-      animation: shimmer 2s infinite;
+      background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.3) 100%);
+      transform: translateX(-100%);
+      animation: shimmerMove 2s infinite;
+      pointer-events: none;
     }
 
-    /* Centered percentage text */
+    @keyframes shimmerMove {
+      100% { transform: translateX(100%); }
+    }
+    @keyframes fillPulse {
+      0% { box-shadow: 0 0 2px var(--primary); }
+      50% { box-shadow: 0 0 18px var(--secondary); }
+      100% { box-shadow: 0 0 2px var(--primary); }
+    }
+
     #progressText {
       color: white;
       font-size: 14px;
-      font-weight: 700;
-      pointer-events: none;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-      position: absolute;
-      margin-left: 20px;
-      top: 50%;
-      left: 90%;
-      transform: translate(-50%, -50%);
-      z-index: 5;
+      font-weight: 800;
+      text-shadow: 0 0 4px black;
+      z-index: 2;
+      position: relative;
     }
 
-    /* Pulse animation */
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(108, 99, 255, 0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(108, 99, 255,0); }
-      100% { box-shadow: 0 0 0 0 rgba(108, 99, 255,0); }
-    }
-
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-
-    .active-progress {
-      animation: pulse 2s infinite;
-    }
-
+    /* ========= FORM ELEMENTS ========= */
     .input-field {
       width: 100%;
-      padding: 15px;
-      background: var(--dark-surface);
-      border: 2px solid #333;
-      border-radius: 12px;
+      padding: 14px 18px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1.5px solid rgba(108, 99, 255, 0.6);
+      border-radius: 40px;
       color: var(--text-primary);
       margin-bottom: 20px;
       font-size: 1rem;
       transition: all 0.3s ease;
+      backdrop-filter: blur(4px);
     }
 
     .input-field:focus {
       outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(108,99,255,0.2);
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(255, 101, 132, 0.3);
     }
 
+    /* button grid */
     .button-container {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 12px;
       margin-bottom: 20px;
     }
 
     .button {
-      background: var(--dark-surface);
-      border: none;
-      border-radius: 12px;
+      background: rgba(20, 28, 45, 0.7);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(108, 99, 255, 0.6);
+      border-radius: 40px;
       color: var(--text-primary);
-      padding: 12px;
+      padding: 10px 0;
       cursor: pointer;
       font-weight: 600;
-      transition: all 0.3s ease;
-      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      box-shadow: 1px 1px 3px 1px darkslategray;
+      gap: 8px;
     }
 
     .button:hover {
       background: var(--primary);
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      border-color: white;
+      box-shadow: 0 8px 20px rgba(108, 99, 255, 0.4);
     }
 
-    /* Delay toggle active state */
+    /* delay active state (kept same class) */
     .delay-active {
       background: var(--primary-dark) !important;
       color: white !important;
+      box-shadow: 0 0 12px var(--primary);
     }
 
+    /* time info panel */
     #timeDiv {
-      background: var(--dark-surface);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(5px);
       padding: 12px;
-      border-radius: 12px;
+      border-radius: 40px;
       text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 18px;
       color: var(--text-secondary);
+      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.9rem;
     }
 
     #timer {
       font-size: 1.6rem;
       text-align: center;
-      margin-top: 10px;
+      margin-top: 12px;
       color: var(--primary);
+      font-family: monospace;
+      font-weight: 800;
+      text-shadow: 0 0 5px var(--primary);
     }
 
     .main-action {
-      background: var(--primary);
-      color: white !important;
+      background: linear-gradient(95deg, var(--primary), var(--primary-dark));
+      color: white;
       width: 100%;
-      padding: 15px;
-      margin-top: 10px;
-      border-radius: 12px;
+      padding: 14px;
+      border-radius: 40px;
       font-size: 1rem;
       cursor: pointer;
       border: none;
-      transition: 0.3s;
-      font-weight: 700;
+      transition: all 0.2s;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+      box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
     }
 
     .main-action:hover {
-      background: var(--primary-dark);
       transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(108, 99, 255, 0.5);
     }
 
     #btnStop {
-      background: var(--error);
-      color: white !important;
-    }
-
-    #btnStop:hover {
-      background: #d7362f;
+      background: linear-gradient(95deg, #ff416c, #ff4b2b);
+      box-shadow: 0 8px 20px rgba(255, 65, 108, 0.4);
     }
 
     .hidden {
       display: none;
     }
 
-  </style>
+    /* custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #111;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
 
+    /* responsive adjustments */
+    @media (max-width: 550px) {
+      .container { padding: 20px; }
+      .button-container { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-  <h2><i class="fas fa-search"></i> Search Assistant</h2>
+<!-- particle background (non‑functional eye candy) -->
+<canvas id="particleCanvas"></canvas>
 
-  <h3><span id="count">0</span> / <span id="total">0</span> Searches Done</h3>
+<div class="tilt-wrapper" id="tiltWrapper">
+  <div class="container">
+    <h2><i class="fas fa-microchip"></i> Search Assistant <i class="fas fa-globe"></i></h2>
 
-  <div class="progress-container">
-    <div class="progress-bar">
+    <h3><span id="count">0</span> / <span id="total">0</span> Searches Done</h3>
+
+    <div class="progress-container">
+      <div class="progress-bar">
         <div id="progressFill">
-            <span id="progressText">0%</span>
+          <span id="progressText">0%</span>
         </div>
+      </div>
     </div>
+
+    <form id="searchForm">
+      <label for="num">Number of searches:</label>
+      <input type="number" id="num" name="num" min="1" max="50" class="input-field" value="10">
+
+      <div class="button-container">
+        <button type="button" class="button" onclick="setNumber(5)">
+          <i class="fas fa-bolt"></i> 5
+        </button>
+        <button type="button" class="button" onclick="setNumber(30)">
+          <i class="fas fa-gauge-high"></i> 30
+        </button>
+        <button type="button" class="button" style="background-color: #3c693e;" onclick="adjustNumber(5)">
+          <i class="fas fa-plus"></i> 5
+        </button>
+        <button type="button" class="button" onclick="setNumber(10)">
+          <i class="fas fa-rocket"></i> 10
+        </button>
+        <button type="button" class="button" onclick="setNumber(35)">
+          <i class="fas fa-forward"></i> 35
+        </button>
+        <button type="button" class="button" style="background-color: #ff7b2f;" onclick="adjustNumber(-5)">
+          <i class="fas fa-minus"></i> 5
+        </button>
+        <button type="button" class="button" onclick="setNumber(20)">
+          <i class="fas fa-fire"></i> 20
+        </button>
+        <button type="button" class="button" onclick="setNumber(40)">
+          <i class="fas fa-running"></i> 40
+        </button>
+        <button type="button" class="button" id="delay" onclick="toggleDelay()">
+          <i class="fas fa-clock"></i> <span id="delayLabel">Delay: 16s</span>
+        </button>
+      </div>
+
+      <div id="timeDiv">Total time required: <span id="time">0</span> seconds</div>
+
+      <div id="timer" class="hidden"></div>
+
+      <input type="submit" id="btnSearch" value="Search" class="main-action">
+    </form>
+
+    <button id="btnStop" class="main-action hidden">Stop</button>
   </div>
-
-  <form id="searchForm">
-
-    <label for="num">Number of searches:</label>
-    <input type="number" id="num" name="num" min="1" max="50" class="input-field">
-
-    <div class="button-container">
-
-      <button type="button" class="button" onclick="setNumber(5)">
-        <i class="fas fa-bolt"></i> 5
-      </button>
-
-      <button type="button" class="button" onclick="setNumber(30)">
-        <i class="fas fa-gauge-high"></i> 30
-      </button>
-
-      <button type="button" class="button" style="background-color: #3c693e;" onclick="adjustNumber(5)">
-        <i class="fas fa-plus"></i> 5
-      </button>
-
-      <button type="button" class="button" onclick="setNumber(10)">
-        <i class="fas fa-rocket"></i> 10
-      </button>
-
-      <button type="button" class="button" onclick="setNumber(35)">
-        <i class="fas fa-forward"></i> 35
-      </button>
-
-      <button type="button" class="button" style="background-color: #ff7b2f;" onclick="adjustNumber(-5)">
-        <i class="fas fa-minus"></i> 5
-      </button>
-
-      <button type="button" class="button" onclick="setNumber(20)">
-        <i class="fas fa-fire"></i> 20
-      </button>
-
-      <button type="button" class="button" onclick="setNumber(40)">
-        <i class="fas fa-running"></i> 40
-      </button>
-
-      <button type="button" class="button" id="delay" onclick="toggleDelay()">
-        <i class="fas fa-clock"></i> <span id="delayLabel">Delay: 16s</span>
-      </button>
-    </div>
-
-    <div id="timeDiv">Total time required: <span id="time">0</span> seconds</div>
-
-    <div id="timer" class="hidden"></div>
-
-    <input type="submit" id="btnSearch" value="Search" class="main-action">
-
-  </form>
-
-  <button id="btnStop" class="main-action hidden">Stop</button>
-
 </div>
 
 <script src="app.js"></script>
 
+<!-- NON‑FUNCTIONAL ENHANCEMENTS (visual only) -->
+<script>
+  (function() {
+    // ----- Particle System (floating neon dots) -----
+    const canvas = document.getElementById('particleCanvas');
+    if (canvas) {
+      let ctx = canvas.getContext('2d');
+      let particles = [];
+      let particleCount = 180;
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      function initParticles() {
+        particles = [];
+        for (let i = 0; i < particleCount; i++) {
+          particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 2.5 + 1,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.2,
+            alpha: Math.random() * 0.5 + 0.2,
+            color: `hsl(${Math.random() * 60 + 240}, 70%, 65%)`
+          });
+        }
+      }
+      function drawParticles() {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let p of particles) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.alpha;
+          ctx.fill();
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0) p.x = canvas.width;
+          if (p.x > canvas.width) p.x = 0;
+          if (p.y < 0) p.y = canvas.height;
+          if (p.y > canvas.height) p.y = 0;
+        }
+        requestAnimationFrame(drawParticles);
+      }
+      window.addEventListener('resize', () => {
+        resizeCanvas();
+        initParticles();
+      });
+      resizeCanvas();
+      initParticles();
+      drawParticles();
+    }
+
+    // ----- 3D Tilt Effect (purely cosmetic, does not alter functionality) -----
+    const wrapper = document.getElementById('tiltWrapper');
+    if (wrapper) {
+      wrapper.addEventListener('mousemove', (e) => {
+        const rect = wrapper.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const maxRotate = 8;
+        const rotY = (x / (rect.width / 2)) * maxRotate;
+        const rotX = (y / (rect.height / 2)) * -maxRotate;
+        wrapper.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+      });
+      wrapper.addEventListener('mouseleave', () => {
+        wrapper.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+      });
+    }
+
+    // ----- Confetti burst on completion (non‑intrusive observer) -----
+    const countSpan = document.getElementById('count');
+    const totalSpan = document.getElementById('total');
+    if (countSpan && totalSpan) {
+      let lastCompleted = 0;
+      const observer = new MutationObserver(() => {
+        const current = parseInt(countSpan.innerText, 10);
+        const total = parseInt(totalSpan.innerText, 10);
+        if (!isNaN(current) && !isNaN(total) && current === total && total > 0 && current !== lastCompleted) {
+          lastCompleted = current;
+          // burst confetti when search reaches 100%
+          canvasConfetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, startVelocity: 20, colors: ['#6C63FF', '#FF6584', '#FFFFFF'] });
+          canvasConfetti({ particleCount: 80, spread: 130, origin: { y: 0.5, x: 0.2 } });
+          canvasConfetti({ particleCount: 80, spread: 130, origin: { y: 0.5, x: 0.8 } });
+        }
+      });
+      observer.observe(countSpan, { childList: true, subtree: true, characterData: true });
+    }
+  })();
+</script>
 </body>
 </html>
-
-
